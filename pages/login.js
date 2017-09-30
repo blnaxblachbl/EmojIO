@@ -4,7 +4,8 @@ import {
 	AppRegistry,
 	StyleSheet,
 	View,
-	Text
+	Text,
+	DeviceEventEmitter
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,10 +31,17 @@ import {
 	constructor(props) {
 		super(props);
 		this.state = {
-			accountName: "",
-			appName: "",
 			userName: "",
 			userPass: ""
+		}
+	}
+
+	validate = () =>{
+	console.log("validate open");
+		if(this.state.userName && this.state.userPass){
+			console.log("validate");
+		}else {
+			alert("Заполните все блять!!!")
 		}
 	}
 
@@ -41,15 +49,13 @@ import {
 		const {navigate} = this.props.navigation
 		return (
 			<View style={styles.container}>
-				<RkTextInput placeholder=' Account name' rkType='rounded' onChangeText={(text) => this.setState({accountName : text})}/>
-				<RkTextInput placeholder=' Application name' rkType='rounded' onChangeText={(text) => this.setState({appName : text})}/>
 				<RkTextInput placeholder=' User name' rkType='rounded' onChangeText={(text) => this.setState({userName : text})}/>
 				<RkTextInput secureTextEntry={true} placeholder=' User password' rkType='rounded' onChangeText={(text) => this.setState({userPass : text})}/>
-				<RkButton style={styles.button} onPress = {()=>{navigate('MainPage')}} rkType='success'>
-					<LinearGradient 
+				<RkButton style={styles.button} onPress={this.validate.bind(this)} rkType='success'>
+					<LinearGradient
 						colors={['#ffc42a', '#F3902B']}
 						start={{x: 0.0, y: 0.5}}
-                        end={{x: 1, y: 0.5}} 
+                        end={{x: 1, y: 0.5}}
                         style={styles.linearGradient}
                    	>
 					  <Text style={styles.buttonText}>

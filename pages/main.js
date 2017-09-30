@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import {View, Text, TextInput, ScrollView, TouchableHighlight, Dimensions, StyleSheet, BackHandler} from 'react-native';
+import {View, Text, TextInput, ScrollView, TouchableHighlight, StyleSheet, BackHandler} from 'react-native';
 import {observer, inject} from 'mobx-react/native';
-import VoxImplant from "react-native-voximplant";
-
-var width = Dimensions.get('window').width;
-var height = Dimensions.get('window').height; 
 
 @inject('store')
 @observer class MainPage extends Component{
