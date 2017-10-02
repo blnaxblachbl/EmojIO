@@ -2,7 +2,7 @@
  * Sample React Native App
  * https://github.com/facebook/react-native
  * @flow
- */
+*/
 
 import React, { Component } from 'react';
 import store from './store';
@@ -22,3 +22,5 @@ export default class EmojIO extends Component {
 }
 
 AppRegistry.registerComponent('EmojIO', () => EmojIO);
+
+// require('./webrtc');

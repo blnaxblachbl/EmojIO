@@ -37,11 +37,13 @@ import {
 	}
 
 	validate = () =>{
-	console.log("validate open");
+		console.log("validate open");
+		const {navigate} = this.props.navigation
+		navigate('MainPage');
 		if(this.state.userName && this.state.userPass){
 			console.log("validate");
 		}else {
-			alert("Заполните все блять!!!")
+			console.log("Заполните все блять!!!")
 		}
 	}
 
