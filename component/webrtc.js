@@ -148,7 +148,7 @@ function createPC(socketId, isOffer) {
 
     dataChannel.onopen = function () {
       console.log('dataChannel.onopen');
-      container.setState({textRoomConnected: true});
+      container.setState({textRoomConnected: false}); // при подключении должен быть тру, но для временного отключения пока что стоит false
     };
 
     dataChannel.onclose = function () {
@@ -330,16 +330,6 @@ const WebRTC = React.createClass({
     return (
       <View style={styles.container}>
         {this.state.textRoomConnected && this._renderTextRoom()}
-        <View style={{flexDirection: 'row'}}>
-          <Text>
-            {this.state.isFront ? "Use front camera" : "Use back camera"}
-          </Text>
-          <TouchableHighlight
-            style={{borderWidth: 1, borderColor: 'black'}}
-            onPress={this._switchVideoType}>
-            <Text>Switch camera</Text>
-          </TouchableHighlight>
-        </View>
         { this.state.status == 'ready' ?
           (<View>
             <TextInput
