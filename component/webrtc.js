@@ -252,7 +252,7 @@ const WebRTC = React.createClass({
     return {
       info: 'Initializing',
       status: 'init',
-      roomID: '',
+      roomID: 'emojio',
       isFront: true,
       selfViewSrc: null,
       remoteList: {},
@@ -266,7 +266,7 @@ const WebRTC = React.createClass({
     initStream();
   },
   _press(event) {
-    this.refs.roomID.blur();
+    //this.refs.roomID.blur();
     this.setState({status: 'connect', info: 'Connecting'});
     join(this.state.roomID);
   },
@@ -330,20 +330,7 @@ const WebRTC = React.createClass({
     return (
       <View style={styles.container}>
         {this.state.textRoomConnected && this._renderTextRoom()}
-        { this.state.status == 'ready' ?
-          (<View>
-            <TextInput
-              ref='roomID'
-              autoCorrect={false}
-              style={{width: 200, height: 40, borderColor: 'gray', borderWidth: 1}}
-              onChangeText={(text) => this.setState({roomID: text})}
-              value={this.state.roomID}
-            />
-            <TouchableHighlight
-              onPress={this._press}>
-              <Text>Enter room</Text>
-            </TouchableHighlight>
-          </View>) : null
+        { this.state.status == 'ready' ? (this._press()) : null
         }
         <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView}/>
         {
