@@ -9,11 +9,14 @@ import {
   TextInput,
   ListView,
   Platform,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 
 import io from 'socket.io-client';
 
 const socket = io.connect('https://react-native-webrtc.herokuapp.com', {transports: ['websocket']});
+var {height, width} = Dimensions.get('window');
 
 import {
   RTCPeerConnection,
@@ -27,6 +30,7 @@ import {
 
 const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 
+let localId;
 const pcPeers = {};
 let localStream;
 
@@ -78,6 +82,8 @@ function join(roomID) {
 function createPC(socketId, isOffer) {
   const pc = new RTCPeerConnection(configuration);
   pcPeers[socketId] = pc;
+
+  localId = socketId;
 
   pc.onicecandidate = function (event) {
     console.log('onicecandidate', event.candidate);
@@ -265,6 +271,10 @@ const WebRTC = React.createClass({
     container = this;
     initStream();
   },
+  componentWillUnmount(){
+    leave(localId);
+    socket.disconnect();
+  },
   _press(event) {
     //this.refs.roomID.blur();
     this.setState({status: 'connect', info: 'Connecting'});
@@ -326,18 +336,28 @@ const WebRTC = React.createClass({
       </View>
     );
   },
+  renderOpponent(){
+    if (this.state.remoteList){
+      return(
+        mapHash(this.state.remoteList, function(remote, index) {
+          return <RTCView ref='remoteView' key={index} streamURL={remote} style={styles.remoteView}/>
+        })
+      )
+    }else{
+      return <ActivityIndicator animating = {true} color = "#000ff"/>
+    }
+  },
   render() {
     return (
       <View style={styles.container}>
         {this.state.textRoomConnected && this._renderTextRoom()}
-        { this.state.status == 'ready' ? (this._press()) : null
-        }
-        <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView}/>
-        {
-          mapHash(this.state.remoteList, function(remote, index) {
-            return <RTCView key={index} streamURL={remote} style={styles.remoteView}/>
-          })
-        }
+        { this.state.status == 'ready' ? (this._press()) : null}
+        <View style ={{height: height/2}}>
+          <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView}/>
+        </View>
+        <View style ={{height: height/2, top: -25}}>
+          {this.renderOpponent()}
+        </View>
       </View>
     );
   }
@@ -345,16 +365,17 @@ const WebRTC = React.createClass({
 
 const styles = StyleSheet.create({
   selfView: {
+    flex:1,
     width: '100%',
-    height: '30%',
+    height: height/2,
   },
   remoteView: {
+    flex:1,
     width: '100%',
-    height: '30%',
+    height: height/2,
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
