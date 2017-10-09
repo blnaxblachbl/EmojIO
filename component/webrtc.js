@@ -270,6 +270,7 @@ const WebRTC = React.createClass({
   componentDidMount: function() {
     container = this;
     initStream();
+    console.disableYellowBox = true;
   },
   componentWillUnmount(){
     leave(localId);
@@ -340,7 +341,7 @@ const WebRTC = React.createClass({
     if (this.state.remoteList.length !== 0){
       return(
         mapHash(this.state.remoteList, function(remote, index) {
-          return <RTCView ref='remoteView' key={index} streamURL={remote} style={styles.remoteView} objectFit={'cover'}/>
+          return <RTCView ref='remoteView' key={index} streamURL={remote} style={styles.remoteView} objectFit={'cover'} mirror={true}/>
         })
       )
     }else{
@@ -353,7 +354,7 @@ const WebRTC = React.createClass({
         {this.state.textRoomConnected && this._renderTextRoom()}
         { this.state.status == 'ready' ? (this._press()) : null}
         <View style ={{height: height/2}}>
-          <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} objectFit={'cover'}/>
+          <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} objectFit={'cover'} mirror={true}/>
         </View>
         <View style ={{height: height/2, top: -25}}>
           {this.renderOpponent()}
@@ -368,13 +369,11 @@ const styles = StyleSheet.create({
     flex:1,
     width: width,
     height: height/2,
-    position: 'absolute',
   },
   remoteView: {
     flex:1,
     width: width,
     height: height/2,
-    position: 'absolute',
   },
   container: {
     flex: 1,
