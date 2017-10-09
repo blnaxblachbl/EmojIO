@@ -337,14 +337,14 @@ const WebRTC = React.createClass({
     );
   },
   renderOpponent(){
-    if (this.state.remoteList){
+    if (this.state.remoteList.length !== 0){
       return(
         mapHash(this.state.remoteList, function(remote, index) {
-          return <RTCView ref='remoteView' key={index} streamURL={remote} style={styles.remoteView}/>
+          return <RTCView ref='remoteView' key={index} streamURL={remote} style={styles.remoteView} objectFit={'cover'}/>
         })
       )
     }else{
-      return <ActivityIndicator animating = {true} color = "#000ff"/>
+      return <ActivityIndicator animating = {true} color = "#000ff" size="large"/>
     }
   },
   render() {
@@ -353,7 +353,7 @@ const WebRTC = React.createClass({
         {this.state.textRoomConnected && this._renderTextRoom()}
         { this.state.status == 'ready' ? (this._press()) : null}
         <View style ={{height: height/2}}>
-          <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView}/>
+          <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} objectFit={'cover'}/>
         </View>
         <View style ={{height: height/2, top: -25}}>
           {this.renderOpponent()}
@@ -366,13 +366,15 @@ const WebRTC = React.createClass({
 const styles = StyleSheet.create({
   selfView: {
     flex:1,
-    width: '100%',
+    width: width,
     height: height/2,
+    position: 'absolute',
   },
   remoteView: {
     flex:1,
-    width: '100%',
+    width: width,
     height: height/2,
+    position: 'absolute',
   },
   container: {
     flex: 1,

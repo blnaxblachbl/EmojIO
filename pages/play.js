@@ -7,6 +7,7 @@ import WebRTC from '../component/webrtc';
 @observer class MainPage extends Component{
 	static navigationOptions = {
 	  title: 'this is play page',
+    header: null,
 	}
 
 	constructor(props) {
