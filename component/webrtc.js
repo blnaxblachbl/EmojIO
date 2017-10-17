@@ -30,9 +30,9 @@ import {
 
 const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
 
-let localId;
 const pcPeers = {};
 let localStream;
+let remoteStream;
 
 function getLocalStream(isFront, callback) {
 
@@ -83,8 +83,6 @@ function createPC(socketId, isOffer) {
   const pc = new RTCPeerConnection(configuration);
   pcPeers[socketId] = pc;
 
-  localId = socketId;
-
   pc.onicecandidate = function (event) {
     console.log('onicecandidate', event.candidate);
     if (event.candidate) {
@@ -127,10 +125,8 @@ function createPC(socketId, isOffer) {
   pc.onaddstream = function (event) {
     console.log('onaddstream', event.stream);
     container.setState({info: 'One peer join!'});
-
-    const remoteList = container.state.remoteList;
-    remoteList[socketId] = event.stream.toURL();
-    container.setState({ remoteList: remoteList });
+    remoteStream = event.stream;
+    container.setState({ remoteList: event.stream.toURL() });
   };
   pc.onremovestream = function (event) {
     console.log('onremovestream', event.stream);
@@ -200,9 +196,7 @@ function leave(socketId) {
   pc.close();
   delete pcPeers[socketId];
 
-  const remoteList = container.state.remoteList;
-  delete remoteList[socketId]
-  container.setState({ remoteList: remoteList });
+  container.setState({ remoteList: null });
   container.setState({info: 'One peer leave!'});
 }
 
@@ -261,7 +255,7 @@ const WebRTC = React.createClass({
       roomID: 'emojio',
       isFront: true,
       selfViewSrc: null,
-      remoteList: {},
+      remoteList: '',
       textRoomConnected: false,
       textRoomData: [],
       textRoomValue: '',
@@ -272,8 +266,12 @@ const WebRTC = React.createClass({
     initStream();
     console.disableYellowBox = true;
   },
-  componentWillUnmount(){
-    leave(localId);
+  componentWillUnmount: function(){
+    socket.emit('leave');
+    localStream.release();
+    localStream = null;
+    remoteStream.stop();
+    remoteStream = null;
     socket.disconnect();
   },
   _press(event) {
@@ -338,12 +336,8 @@ const WebRTC = React.createClass({
     );
   },
   renderOpponent(){
-    if (this.state.remoteList.length !== 0){
-      return(
-        mapHash(this.state.remoteList, function(remote, index) {
-          return <RTCView ref='remoteView' key={index} streamURL={remote} style={styles.remoteView} objectFit={'cover'} mirror={true}/>
-        })
-      )
+    if (this.state.remoteList){
+      return <RTCView ref='remoteView' key={0} streamURL={this.state.remoteList} style={styles.remoteView} objectFit={'cover'} mirror={true}/>      
     }else{
       return <ActivityIndicator animating = {true} color = "#000ff" size="large"/>
     }
@@ -356,7 +350,7 @@ const WebRTC = React.createClass({
         <View style ={{height: height/2}}>
           <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} objectFit={'cover'} mirror={true}/>
         </View>
-        <View style ={{height: height/2, top: -25}}>
+        <View style ={{height: height/2, top: -23}}>
           {this.renderOpponent()}
         </View>
       </View>
