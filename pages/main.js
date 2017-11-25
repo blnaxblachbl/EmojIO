@@ -3,7 +3,6 @@ import {View, Text, TextInput, ScrollView, TouchableHighlight, Dimensions, Style
 import {observer, inject} from 'mobx-react/native';
 import {RkButton, RkTextInput, RkTheme} from 'react-native-ui-kitten';
 import LinearGradient from 'react-native-linear-gradient';
-import WebRTC from '../component/webrtc';
 
 @inject('store')
 @observer class MainPage extends Component{
@@ -18,18 +17,16 @@ import WebRTC from '../component/webrtc';
 	}
 
 	componentDidMount() {
-  	BackHandler.addEventListener('hardwareBackPress', this.popy);
-  }
-  componentWillUnmount() {
-  	BackHandler.removeEventListener('hardwareBackPress', this.popy);
-  }
-  popy = () =>{
-  	if ((this.props.navigation) && (this.props.navigation.state.name === 'MapPage')){
-  		return false
-  	}else{
-  		return true
-  	}
-  }
+	}
+	componentWillUnmount() {
+	}
+	popy = () =>{
+		if ((this.props.navigation) && (this.props.navigation.state.name === 'MapPage')){
+			return false
+		}else{
+			return true
+		}
+	}
 	render(){
 		const {navigate} = this.props.navigation
 		return(

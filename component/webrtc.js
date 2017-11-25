@@ -243,6 +243,7 @@ socket.on('connect', function(data) {
       localStream = stream;
       container.setState({ selfViewSrc: stream.toURL() });
       container.setState({ status: 'ready', info: 'Please enter or create room ID' });
+      container._press();
     });
   }
 
@@ -270,8 +271,6 @@ const WebRTC = React.createClass({
     socket.emit('leave');
     localStream.release();
     localStream = null;
-    remoteStream.stop();
-    remoteStream = null;
     socket.disconnect();
   },
   _press(event) {
@@ -339,14 +338,12 @@ const WebRTC = React.createClass({
     if (this.state.remoteList){
       return <RTCView ref='remoteView' key={0} streamURL={this.state.remoteList} style={styles.remoteView} objectFit={'cover'} mirror={true}/>      
     }else{
-      return <ActivityIndicator animating = {true} color = "#000ff" size="large"/>
+      return <ActivityIndicator animating = {true} size="large"/>
     }
   },
   render() {
     return (
       <View style={styles.container}>
-        {this.state.textRoomConnected && this._renderTextRoom()}
-        { this.state.status == 'ready' ? (this._press()) : null}
         <View style ={{height: height/2}}>
           <RTCView streamURL={this.state.selfViewSrc} style={styles.selfView} objectFit={'cover'} mirror={true}/>
         </View>
