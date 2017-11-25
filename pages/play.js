@@ -93,7 +93,6 @@ var {height, width} = Dimensions.get('window');
 	render(){
 		const {navigate} = this.props.navigation
 		return(
-      <Modal animationType='fade' transparent={true} visible={this.state.visible}>
         <View style={styles.container}>
           <Modal animationType='fade' transparent={true} visible={this.state.visible}>
             <TouchableHighlight style = {{height: 50, width: 50, backgroundColor: 'transparent'}} underlayColor='transparent' onPress={()=>{this._onVideoDisconnectButtonPress();}}>
@@ -115,7 +114,6 @@ var {height, width} = Dimensions.get('window');
           <TwilioVideoLocalView style={styles.videoViewContainer}/>
           <TwilioVideoParticipantView style={styles.videoViewContainer}/>
         </View>
-      </Modal>
 		);
 	}
 }
