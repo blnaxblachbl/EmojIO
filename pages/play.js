@@ -24,14 +24,16 @@ var {height, width} = Dimensions.get('window');
 	  this.state = {
       visible: true,
       participant: true,
-      visible: true,
       room: 'emojion',
+      animLeft: new Animated.Value(0),
     };
 	}
-  // tit = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2YwNjRiYTdmZDRkYzZkYmUwNDg3ODVkNDVhNDgxMjdjLTE1MTEyMzE2NzMiLCJpc3MiOiJTS2YwNjRiYTdmZDRkYzZkYmUwNDg3ODVkNDVhNDgxMjdjIiwic3ViIjoiQUNjZjkxYzJkZmVjNGEyYjEyYTgyZGMzMzdlNzRmYTExOSIsImV4cCI6MTUxMTIzNTI3MywiZ3JhbnRzIjp7ImlkZW50aXR5IjoicmVhY3QiLCJ2aWRlbyI6eyJyb29tIjoibG9sIn19fQ.5NaWG6H3Vc4MdmBR9XIsYEuBjADvphqIFYrOQfLGhP8'
-  // kinat = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2YwNjRiYTdmZDRkYzZkYmUwNDg3ODVkNDVhNDgxMjdjLTE1MTEwNzY3MzUiLCJpc3MiOiJTS2YwNjRiYTdmZDRkYzZkYmUwNDg3ODVkNDVhNDgxMjdjIiwic3ViIjoiQUNjZjkxYzJkZmVjNGEyYjEyYTgyZGMzMzdlNzRmYTExOSIsImV4cCI6MTUxMTA4MDMzNSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoicmVhY3QyIiwidmlkZW8iOnsicm9vbSI6ImVtb2ppb24ifX19.85W7s-8hyBkty4rdMv45scsCaVZUyS5LBxqJYQGgakw'
-  _onVideoConnectButtonPress = () => {
-    //this.refs.twilioVideo.connect({roomName: "emojion", accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2YwNjRiYTdmZDRkYzZkYmUwNDg3ODVkNDVhNDgxMjdjLTE1MTEwNzY2NzgiLCJpc3MiOiJTS2YwNjRiYTdmZDRkYzZkYmUwNDg3ODVkNDVhNDgxMjdjIiwic3ViIjoiQUNjZjkxYzJkZmVjNGEyYjEyYTgyZGMzMzdlNzRmYTExOSIsImV4cCI6MTUxMTA4MDI3OCwiZ3JhbnRzIjp7ImlkZW50aXR5IjoicmVhY3QiLCJ2aWRlbyI6eyJyb29tIjoiZW1vamlvbiJ9fX0.xpm0niVR2UpqX3ZuupVw-kIJTmb7xkf4LPXwdCLRS6A'});
+
+  animStart(){
+    Animated.timing(this.state.animLeft,{
+      toValue: width,
+      duration: 10000
+    }).start();
   }
 
   twilioFetch = () =>{
@@ -50,6 +52,7 @@ var {height, width} = Dimensions.get('window');
     fetch(req).then(data=>{
       if (data.status == 200){
         this.refs.twilioVideo.connect({roomName: "emojion", accessToken: data._bodyInit});
+        this.animStart();
       }else{
         Alert.alert('Emojion', 'Data status: ' + data.status);
       }
@@ -80,14 +83,10 @@ var {height, width} = Dimensions.get('window');
   	}
   }
 
-  closeFun(){
-    this.setState({visible: false});
-    setTimeout(()=>{this.props.navigation.goBack();},200)
-  }
-
   async onDisconnect(){
+    const {navigate} = this.props.navigation;
     await this.setState({visible: false});
-    this.props.navigation.goBack();
+    navigate('ScorePage', {score: 350});
   }
 
 	render(){
@@ -102,6 +101,17 @@ var {height, width} = Dimensions.get('window');
               Score: 350
             </Text>
             <View style={styles.circle}/>
+            <Animated.View style={{
+              height: 50, 
+              width: 50, 
+              backgroundColor: 'red', 
+              position: 'absolute',
+              top: (height/2)-40,
+              left: this.state.animLeft,
+              alignSelf: 'center',
+              borderColor: 'transparent',
+              borderRadius: 25,
+            }}/>
             <View style={{flexDirection: 'row', top: -15}}>
               <View style={styles.leftline} />
               <View style={styles.rightline} />

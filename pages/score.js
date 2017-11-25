@@ -5,9 +5,9 @@ import {RkButton, RkTextInput, RkTheme} from 'react-native-ui-kitten';
 import LinearGradient from 'react-native-linear-gradient';
 
 @inject('store')
-@observer class MainPage extends Component{
+@observer class ScorePage extends Component{
 	static navigationOptions = {
-	  title: 'this is main page',
+	  title: 'this is score page',
 	  headerLeft: null
 	}
 
@@ -30,9 +30,11 @@ import LinearGradient from 'react-native-linear-gradient';
 	}
 	render(){
 		const {navigate} = this.props.navigation
+		const {params} = this.props.navigation.state
 		return(
 			<View style={styles.container}>
-				<RkButton style={styles.button} onPress={()=>{navigate('PlayPage')}} rkType='success'>
+				<Text> Your score: {params.score}</Text>
+				<RkButton style={styles.button} onPress={()=>{navigate('MainPage')}} rkType='success'>
 					<LinearGradient
 						colors={['#ffc42a', '#F3902B']}
 						start={{x: 0.0, y: 0.5}}
@@ -40,11 +42,11 @@ import LinearGradient from 'react-native-linear-gradient';
 		                style={styles.linearGradient}
 		           	>
 					  <Text style={styles.buttonText}>
-					    PlAY
+					    BACK TO MAIN
 					  </Text>
 					</LinearGradient>
 				</RkButton>
-				<RkButton style={styles.button} onPress={()=>{navigate('PlayPage')}} rkType='success'>
+				<RkButton style={styles.button} onPress={()=>{}} rkType='success'>
 					<LinearGradient
 						colors={['#ffc42a', '#F3902B']}
 						start={{x: 0.0, y: 0.5}}
@@ -52,7 +54,7 @@ import LinearGradient from 'react-native-linear-gradient';
 		                style={styles.linearGradient}
 		           	>
 					  <Text style={styles.buttonText}>
-					    SETTINGS
+					    SCORE TABLE
 					  </Text>
 					</LinearGradient>
 				</RkButton>
@@ -88,4 +90,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default MainPage;
+export default ScorePage;
