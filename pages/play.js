@@ -25,15 +25,33 @@ var {height, width} = Dimensions.get('window');
       visible: true,
       participant: true,
       room: 'emojion',
-      animLeft: new Animated.Value(0),
+      animLeft: new Animated.Value(-50),
+      animRight: new Animated.Value(-50)
     };
 	}
 
-  animStart(){
+  animStartLeft(){
     Animated.timing(this.state.animLeft,{
-      toValue: width,
-      duration: 10000
+      toValue: (width/2)-25,
+      duration: 5000
     }).start();
+
+    if (this.state.animLeft == (width/2)-25){
+      this.setState({animLeft: -50});
+      this.animStartRight();
+    }
+  }
+
+  animStartRight(){
+    Animated.timing(this.state.animRight,{
+      toValue: (width/2)-25,
+      duration: 5000
+    }).start();
+
+    if (this.state.animRight == (width/2)-25){
+      this.setState({animRight: -50});
+      this.animStartLeft();
+    }
   }
 
   twilioFetch = () =>{
@@ -52,7 +70,7 @@ var {height, width} = Dimensions.get('window');
     fetch(req).then(data=>{
       if (data.status == 200){
         this.refs.twilioVideo.connect({roomName: "emojion", accessToken: data._bodyInit});
-        this.animStart();
+        this.animStartLeft();
       }else{
         Alert.alert('Emojion', 'Data status: ' + data.status);
       }
@@ -108,6 +126,17 @@ var {height, width} = Dimensions.get('window');
               position: 'absolute',
               top: (height/2)-40,
               left: this.state.animLeft,
+              alignSelf: 'center',
+              borderColor: 'transparent',
+              borderRadius: 25,
+            }}/>
+            <Animated.View style={{
+              height: 50, 
+              width: 50, 
+              backgroundColor: 'red', 
+              position: 'absolute',
+              top: (height/2)-40,
+              right: this.state.animLeft,
               alignSelf: 'center',
               borderColor: 'transparent',
               borderRadius: 25,
