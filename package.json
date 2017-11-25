@@ -17,6 +17,7 @@
 		"react-native-twilio-video-webrtc": "git+https://github.com/blackuy/react-native-twilio-video-webrtc.git",
 		"react-native-ui-kitten": "^2.0.1",
 		"react-native-vector-icons": "^4.4.2",
+		"react-native-view-shot": "^2.2.0",
 		"react-native-voximplant": "^0.1.7",
 		"react-navigation": "^1.0.0-beta.21",
 		"socket.io-client": "^2.0.4"
